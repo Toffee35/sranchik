@@ -4,9 +4,8 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from aiogram.utils.keyboard import InlineKeyboardButton, InlineKeyboardMarkup
 
-from src.storage.users import users
-
-from . import RegistState
+from src.states import RegistState
+from src.storages import users
 
 start = Router()
 
@@ -20,6 +19,7 @@ async def _start(message: Message, state: FSMContext):
 
     users.pop(user.id, None)
 
+    await state.clear()
     await state.set_state(RegistState.name)
 
     await message.answer(
@@ -34,3 +34,6 @@ async def _start(message: Message, state: FSMContext):
             ]
         ),
     )
+
+
+__all__ = [start]

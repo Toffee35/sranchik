@@ -1,5 +1,4 @@
 from enum import Enum
-from typing import Dict
 
 
 class Gender(Enum):
@@ -7,7 +6,7 @@ class Gender(Enum):
     Female = "Женский"
 
 
-class User:
+class UserData:
     name: str
     gender: Gender
     avatar: str
@@ -23,4 +22,4 @@ class User:
         return f"{self.__class__.__name__}({items})"
 
 
-users: Dict[int, User] = {}
+__all__ = [Gender, UserData]

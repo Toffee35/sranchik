@@ -5,3 +5,5 @@ from .test import test
 
 handlers = Router()
 handlers.include_routers(regist, test)
+
+__all__ = [handlers]

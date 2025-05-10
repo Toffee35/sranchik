@@ -18,3 +18,6 @@ def main():
     dp.include_router(handlers)
 
     dp.run_polling(bot)
+
+
+__all__ = [main, bot]

@@ -2,10 +2,19 @@ from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
 
-from src.states import BaseState
-from src.storage import User, users
+from src.functions.regist import regist_end
+from src.states import RegistState
 
 profile_avatar = Router()
+
+
+@profile_avatar.message(RegistState.avatar)
+async def _avatar_message(message: Message, state: FSMContext):
+    user = message.from_user
+    if not user:
+        return
+
+    await regist_end(message, user, state, message.photo)
 
 
 @profile_avatar.callback_query(F.data == "profile_avatar")
@@ -16,24 +25,12 @@ async def _profile_avatar(callback: CallbackQuery, state: FSMContext):
     if not isinstance(message, Message):
         return
 
-    name = await state.get_value("name")
-    gender = await state.get_value("gender")
-    if not name or not gender:
-        await message.delete()
-        await message.answer("Пройдите регистрацию заново")
-        return
-
     photos = await user.get_profile_photos(limit=1)
-    if not photos.total_count > 0:
-        await message.answer("Аватарка не обнаружена")
-        return
-
-    users[user.id] = User(name, gender, photos.photos[0][0].file_id)
-
-    await state.clear()
-    await state.set_state(BaseState.base)
 
     await message.delete()
-    await message.answer("Регистрация пройдена")
+    await regist_end(message, user, state, photos.photos[0])
 
     await callback.answer()
+
+
+__all__ = [profile_avatar]

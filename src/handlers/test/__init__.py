@@ -1,6 +1,8 @@
 from aiogram import Router
 
-from .chech import check
+from .check import check
 
 test = Router()
 test.include_routers(check)
+
+__all__ = [test]

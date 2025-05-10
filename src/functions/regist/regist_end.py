@@ -1,8 +1,8 @@
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, PhotoSize, User
 
-from src.states import BaseState
 from src.storages import users
+from src.structs.states import BaseState
 from src.structs.user import UserData
 
 

@@ -4,8 +4,8 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from aiogram.utils.keyboard import InlineKeyboardButton, InlineKeyboardMarkup
 
-from src.states import RegistState
 from src.storages import users
+from src.structs.states import RegistState
 
 start = Router()
 

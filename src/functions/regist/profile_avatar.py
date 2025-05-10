@@ -2,7 +2,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
 from aiogram.utils.keyboard import InlineKeyboardButton, InlineKeyboardMarkup
 
-from src.states import RegistState
+from src.structs.states import RegistState
 from src.structs.user import Gender
 
 

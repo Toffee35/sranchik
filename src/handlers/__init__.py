@@ -1,9 +1,10 @@
 from aiogram import Router
 
-from .regist import regist
-from .test import test
+from .callbacks import callbacks
+from .commands import commands
+from .messages import messages
 
 handlers = Router()
-handlers.include_routers(regist, test)
+handlers.include_routers(callbacks, commands, messages)
 
 __all__ = [handlers]

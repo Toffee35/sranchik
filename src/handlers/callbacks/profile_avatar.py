@@ -3,18 +3,8 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
 
 from src.functions.regist import regist_end
-from src.states import RegistState
 
 profile_avatar = Router()
-
-
-@profile_avatar.message(RegistState.avatar)
-async def _avatar_message(message: Message, state: FSMContext):
-    user = message.from_user
-    if not user:
-        return
-
-    await regist_end(message, user, state, message.photo)
 
 
 @profile_avatar.callback_query(F.data == "profile_avatar")

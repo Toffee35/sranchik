@@ -7,11 +7,11 @@ from aiogram.types import Message
 from src.storages import users
 from src.structs.user import UserData
 
-check = Router()
+get = Router()
 
 
-@check.message(F.text.regexp(r"^/check\s?(\d+)?$").as_("match"))
-async def _check(message: Message, match: Match):
+@get.message(F.text.regexp(r"/get(?:\s(\d+))?$").as_("match"))
+async def _get(message: Message, match: Match[Optional[str]]):
     user_id: Optional[str] = match.group(1)
 
     if not user_id:
@@ -21,7 +21,7 @@ async def _check(message: Message, match: Match):
     user_data: Optional[UserData] = users.get(int(user_id))
 
     if not user_data:
-        await message.answer("Пользователь не найден")
+        await message.answer(f"Пользователь {user_id} не найден")
         return
 
     await message.answer_photo(
@@ -30,4 +30,4 @@ async def _check(message: Message, match: Match):
     )
 
 
-__all__ = [check]
+__all__ = [get]

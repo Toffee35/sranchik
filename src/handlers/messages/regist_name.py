@@ -15,7 +15,7 @@ async def _regist_name(message: Message, state: FSMContext, match: Match):
     name = match.group(1)
 
     if not name:
-        await message.answer("Имя не должно содержать пробелов, табов")
+        await message.answer("Имя не должно содержать пробелов")
         return
 
     await gender_choice(message, state, name)

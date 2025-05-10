@@ -24,10 +24,7 @@ async def _get(message: Message, match: Match[Optional[str]]):
         await message.answer(f"Пользователь {user_id} не найден")
         return
 
-    await message.answer_photo(
-        user_data.avatar,
-        caption=f"<b>Имя:</b> {user_data.name}\n<b>Пол:</b> {user_data.gender.value}",
-    )
+    await message.answer_photo(user_data.avatar, caption=f"{user_data}")
 
 
 __all__ = [get]

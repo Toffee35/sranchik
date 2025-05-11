@@ -1,7 +1,9 @@
-from aiogram import Router
-from aiogram.filters import CommandStart
+from re import Match
+from typing import Optional
+
+from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message
+from aiogram.types import Message, User
 
 from src.storages import users
 from src.structs.keyboards import inline
@@ -10,16 +12,19 @@ from src.structs.states import RegistState
 start = Router()
 
 
-@start.message(CommandStart())
-async def _start(message: Message, state: FSMContext):
-    user = message.from_user
-    if not user:
-        return
-
+@start.message(
+    F.text.regexp(r"^/start(?:\s(\d+))?$").as_("match"), F.from_user.as_("user")
+)
+async def _start(
+    message: Message, user: User, state: FSMContext, match: Match[Optional[str]]
+):
     users.pop(user.id, None)
     await state.clear()
-    await state.set_state(RegistState.name)
 
+    if invite_id := match.group(1):
+        await state.update_data(inviter=int(invite_id))
+
+    await state.set_state(RegistState.name)
     await message.answer("Назови свое имя", reply_markup=inline.profile_name)
 
 

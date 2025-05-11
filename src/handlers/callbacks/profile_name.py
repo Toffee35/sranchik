@@ -9,14 +9,9 @@ profile_name = Router()
 
 
 @profile_name.callback_query(RegistState.name, F.data == "profile_name")
-async def _profile_name(callback: CallbackQuery, state: FSMContext):
-    message = callback.message
-    if not isinstance(message, Message):
-        return
-
+async def _profile_name(callback: CallbackQuery, message: Message, state: FSMContext):
     await message.delete()
     await gender_choice(message, state, callback.from_user.first_name)
-
     await callback.answer()
 
 

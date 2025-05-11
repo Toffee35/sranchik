@@ -1,7 +1,6 @@
 from aiogram.utils.keyboard import KeyboardButton, ReplyKeyboardMarkup
 
 base = ReplyKeyboardMarkup(
-    is_persistent=True,
     resize_keyboard=True,
     keyboard=[
         [

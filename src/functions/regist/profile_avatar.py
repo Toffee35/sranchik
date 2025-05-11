@@ -8,23 +8,19 @@ from src.structs.user import Gender
 from ..results import regist_repeat
 
 
-async def profile_avatar(callback: CallbackQuery, state: FSMContext, gender: Gender):
-    message = callback.message
-    if not isinstance(message, Message):
-        return
+async def profile_avatar(
+    callback: CallbackQuery, message: Message, state: FSMContext, gender: Gender
+):
+    await message.delete()
 
-    name = await state.get_value("name")
-    if not name:
-        await message.delete()
+    if not await state.get_value("name"):
         await regist_repeat(message)
         return
 
     await state.update_data(gender=gender)
     await state.set_state(RegistState.avatar)
 
-    await message.delete()
     await message.answer("Отправь аватар", reply_markup=inline.profile_avatar)
-
     await callback.answer()
 
 

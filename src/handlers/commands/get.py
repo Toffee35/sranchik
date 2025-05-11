@@ -1,5 +1,4 @@
 from re import Match
-from typing import Optional
 
 from aiogram import F, Router
 from aiogram.types import Message, User
@@ -10,7 +9,7 @@ get = Router()
 
 
 @get.message(F.text.regexp(r"^/get(?:\s(\d+))?$").as_("match"), F.from_user.as_("user"))
-async def _get(message: Message, user: User, match: Match[Optional[str]]):
+async def _get(message: Message, user: User, match: Match):
     if user_id := match.group(1):
         user_id: int = int(user_id if user_id != "0" else user.id)
 

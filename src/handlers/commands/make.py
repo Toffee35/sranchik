@@ -9,28 +9,27 @@ from src.storages import users
 make = Router()
 
 
-@make.message(
-    F.text.regexp(r"^/make(?:\s(\S+))?(?:\s(\d+))?(?:\s(\S+))?$").as_("match")
-)
-async def _make(
-    message: Message, match: Match[Optional[str], Optional[str], Optional[str]]
-):
+@make.message(F.text.regexp(r"^/make\s(\S)(\S)(?:\s(\d+))?(?:\s(\S+))?$").as_("match"))
+async def _make(message: Message, match: Match):
     group: Optional[str] = match.group(1)
     item: Optional[str] = match.group(2)
-    value: Optional[str] = match.group(3)
-    if not (group and item and value):
-        await message.answer("Не верные аргументы")
+    integer: Optional[str] = match.group(3)
+    string: Optional[str] = match.group(4)
 
     try:
         match group:
-            case "k":
-                users[int(item)].kisses = int(value)
-            case "s":
-                users[int(item)].shits = int(value)
-            case "i":
-                users[int(item)].invites = int(value)
+            case "u":  # изменение юзера
+                match item:
+                    case "k":  # а именно поцелуи
+                        users[int(integer)].kisses = int(string)
+                    case "s":  # а именно дерьмо
+                        users[int(integer)].shits = int(string)
+                    case "i":  # а именно инвайты
+                        users[int(integer)].invites = int(string)
+                    case _:
+                        raise ValueError("Не известный предмет")
             case _:
-                raise ValueError("Не известный аргумент")
+                raise ValueError("Не известная группа")
     except Exception as e:
         await message.answer(f"Ошибка {e.__class__.__name__}: {e}", parse_mode=None)
     else:

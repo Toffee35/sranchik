@@ -10,7 +10,7 @@ from .regist_avatar import regist_avatar
 from .regist_name import regist_name
 
 base = Router()
-base.message.filter(~F.text.startswith("/"), BaseState.base)
+base.message.filter(BaseState.base)
 base.include_routers(menu, my_profile, assessment)
 
 messages = Router()

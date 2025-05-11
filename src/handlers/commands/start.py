@@ -4,6 +4,7 @@ from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, User
 
+from src.functions.base import get_menu
 from src.storages import users
 from src.structs.keyboards import inline
 from src.structs.states import RegistState
@@ -15,8 +16,9 @@ start = Router()
     F.text.regexp(r"^/start(?:\s(\d+))?$").as_("match"), F.from_user.as_("user")
 )
 async def _start(message: Message, user: User, state: FSMContext, match: Match):
-    users.pop(user.id, None)
-    await state.clear()
+    if users.get(user.id):
+        await get_menu(message)
+        return
 
     if invite_id := match.group(1):
         if int(invite_id) != user.id:

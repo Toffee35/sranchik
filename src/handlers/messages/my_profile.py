@@ -19,7 +19,7 @@ async def _my_profile(message: Message, user: User):
 {html.bold("Пол:")} {user_data.gender.value}
 {html.bold("Поцелуев:")} {user_data.kisses}
 {html.bold("Дерьма:")} {user_data.shits}
-{html.bold("Статус:")} {"VIP" if user_data.invites > 5 else "Базовый"}
+{html.bold("Статус:")} {"VIP" if user_data.invites > 3 else "Базовый"}
 """,
             reply_markup=inline.profile,
         )

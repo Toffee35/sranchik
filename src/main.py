@@ -1,23 +1,14 @@
-import sys
-from os import getenv
-
 from aiogram import Bot, Dispatcher
-from aiogram.client.default import DefaultBotProperties
-from aiogram.enums import ParseMode
+from aiogram.fsm.storage.memory import MemoryStorage
 
-_TOKEN = sys.argv[1] if len(sys.argv) > 1 else getenv("BOT_TOKEN")
-
-params = DefaultBotProperties(parse_mode=ParseMode.HTML)
-bot = Bot(token=_TOKEN, default=params)
+from .routes import routes
 
 
-def main():
-    from .handlers import handlers
-
-    dp = Dispatcher()
-    dp.include_router(handlers)
+def main(bot: Bot):
+    dp = Dispatcher(storage=MemoryStorage())
+    dp.include_router(routes)
 
     dp.run_polling(bot)
 
 
-__all__ = [main, bot]
+__all__ = [main]

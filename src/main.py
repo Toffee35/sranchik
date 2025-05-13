@@ -1,14 +1,17 @@
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 
+from .database import create_tables
 from .routes import routes
 
 
-def main(bot: Bot):
+async def main(bot: Bot):
     dp = Dispatcher(storage=MemoryStorage())
     dp.include_router(routes)
 
-    dp.run_polling(bot)
+    await create_tables()
+
+    await dp.start_polling(bot)
 
 
 __all__ = [main]

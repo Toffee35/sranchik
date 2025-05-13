@@ -1,3 +1,4 @@
+import asyncio
 import sys
 from os import getenv
 
@@ -15,6 +16,6 @@ props = DefaultBotProperties(parse_mode=ParseMode.HTML)
 bot = Bot(token=TOKEN, default=props)
 
 if __name__ == "__main__":
-    main(bot)
+    asyncio.run(main(bot))
 
 __all__ = [bot]

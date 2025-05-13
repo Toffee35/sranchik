@@ -4,9 +4,9 @@ from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
 
+from src.database import Gender
 from src.keyboards.inline import take_from_profile
 from src.states import Regist
-from src.types import Gender
 from src.utils import repeat_regist
 
 gender = Router()

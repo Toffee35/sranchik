@@ -4,15 +4,18 @@ from aiogram import html
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, PhotoSize, User
 
+from src.database import Gender, UserData, users_session
 from src.keyboards.reply import main
 from src.routes.messages.menu import get_menu
-from src.storages import users
-from src.types import Gender, UserData
 from src.utils import repeat_regist
 
 
 async def setting_avatar(
-    photo: List[PhotoSize], message: Message, user: User, state: FSMContext
+    photo: List[PhotoSize],
+    message: Message,
+    user: User,
+    state: FSMContext,
+    username: str,
 ):
     name: Optional[str] = await state.get_value("name")
     gender: Optional[Gender] = await state.get_value("gender")
@@ -24,11 +27,22 @@ async def setting_avatar(
         await message.answer("Фотография не найдена")
         return
 
-    users[user.id] = UserData(name, gender, photo[0].file_id)
+    async with users_session() as session:
+        session.add(
+            UserData(
+                id=user.id,
+                name=name,
+                mention=username,
+                gender=gender,
+                avatar=photo[0].file_id,
+            )
+        )
 
-    if invite_id := await state.get_value("invite_id"):
-        if (inviter := int(invite_id)) in users:
-            users[inviter].invites += 1
+        if invite_id := await state.get_value("invite_id"):
+            if inviter := await session.get(UserData, invite_id):
+                inviter.invites += 1
+
+        await session.commit()
 
     await message.answer(html.italic("Регистрация пройдена"), reply_markup=main)
 

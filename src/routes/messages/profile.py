@@ -1,8 +1,7 @@
 from aiogram import F, Router, html
 from aiogram.types import Message, User
 
-from src.storages import users
-from src.types import Gender
+from src.database import Gender, UserData, users_session
 from src.utils import repeat_regist
 
 profile = Router()
@@ -10,10 +9,11 @@ profile = Router()
 
 @profile.message(F.from_user.as_("user"), F.text == "Профиль")
 async def _profile(message: Message, user: User):
-    if user_data := users.get(user.id):
-        await message.answer_photo(
-            user_data.avatar,
-            caption=f"""
+    async with users_session() as session:
+        if user_data := await session.get(UserData, user.id):
+            await message.answer_photo(
+                str(user_data.avatar),
+                caption=f"""
 {html.bold("Имя:")} {user_data.name}
 {html.bold("Пол:")} {"Мужской" if user_data.gender == Gender.Male else "Женский"}
 
@@ -22,8 +22,8 @@ async def _profile(message: Message, user: User):
 
 {html.bold("Статус:")} {"Базовый" if user_data.invites < 3 else "VIP"}
 """,
-        )
-        return
+            )
+            return
 
     await repeat_regist(message)
 

@@ -13,10 +13,15 @@ take_from_profile = Router()
 
 @take_from_profile.callback_query(
     StateFilter(Regist.Name, Regist.Avatar),
+    F.from_user.username.as_("username"),
     F.data.regexp(r"^take_from_profile:(name|avatar)$").as_("match"),
 )
 async def _take_from_profile(
-    callback: CallbackQuery, message: Message, match: Match, state: FSMContext
+    callback: CallbackQuery,
+    message: Message,
+    match: Match,
+    state: FSMContext,
+    username: str,
 ):
     item: str = match.group(1)
 
@@ -30,7 +35,7 @@ async def _take_from_profile(
         case "avatar":
             photos: UserProfilePhotos = await user.get_profile_photos(limit=1)
 
-            await setting_avatar(photos.photos[0], message, user, state)
+            await setting_avatar(photos.photos[0], message, user, state, username)
         case _:
             return
 

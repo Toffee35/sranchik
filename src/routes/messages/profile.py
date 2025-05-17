@@ -1,31 +1,31 @@
-from aiogram import F, Router, html
-from aiogram.types import Message, User
+from re import Match
 
-from src.database import Gender, UserData, users_session
-from src.utils import repeat_regist
+from aiogram import F, Router
+from aiogram.filters import StateFilter
+from aiogram.fsm.context import FSMContext
+from aiogram.types import Message
+
+from src.keyboards import reply
+from src.states import Main, Profile
 
 profile = Router()
+profile.message.filter(StateFilter(Profile.Avatar, Profile.Name))
 
 
-@profile.message(F.from_user.as_("user"), F.text == "Профиль")
-async def _profile(message: Message, user: User):
-    async with users_session() as session:
-        if user_data := await session.get(UserData, user.id):
-            await message.answer_photo(
-                str(user_data.avatar),
-                caption=f"""
-{html.bold("Имя:")} {user_data.name}
-{html.bold("Пол:")} {"Мужской" if user_data.gender == Gender.Male else "Женский"}
+@profile.message(Profile.Avatar, F.photo[0].file_id)
+async def _avatar(message: Message, state: FSMContext):
+    await state.set_state(Main.Base)
 
-{html.bold("Поцелуи:")} {user_data.kisses}
-{html.bold("Дерьмо:")} {user_data.shits}
+    await message.answer("Аватарка установлена", reply_markup=reply.base)
 
-{html.bold("Статус:")} {"Базовый" if user_data.invites < 3 else "VIP"}
-""",
-            )
-            return
+@profile.message(Profile.Name, F.text.regexp(r"^[^/](\S+)?$").as_("match"))
+async def _update_name(message: Message, match: Match, state: FSMContext):
+    if match.group(1):
+        await state.set_state(Main.Base)
 
-    await repeat_regist(message)
+        await message.answer("Имя установлено", reply_markup=reply.base)
+        return
 
+    await message.answer("Имя не должно содержать пробелов")
 
 __all__ = [profile]

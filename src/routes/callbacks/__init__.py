@@ -1,22 +1,19 @@
 from aiogram import F, Router
-from aiogram.filters import StateFilter
 
-from src.states import Regist
-
-from .gender import gender
-from .take_from_profile import take_from_profile
-
-regist = Router()
-regist.callback_query.filter(
-    StateFilter(Regist.Name, Regist.Gender, Regist.Avatar),
-    F.message.delete,
-    F.message.as_("message"),
-)
-
-regist.include_routers(take_from_profile, gender)
-
+from .back_main import back_main
+from .main import main
+from .menu_filter import menu_filter
+from .profile import profile
+from .regist import regist
 
 callbacks = Router()
-callbacks.include_routers(regist)
+callbacks.callback_query.filter(F.message.delete, F.message.as_("message"))
+callbacks.include_routers(
+    regist,
+    main,
+    profile,
+    back_main,
+    menu_filter,
+)
 
 __all__ = [callbacks]

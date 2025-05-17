@@ -1,17 +1,23 @@
+import sys
+from os import getenv
+
 from aiogram import Bot, Dispatcher
-from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram.client.default import DefaultBotProperties
+from aiogram.enums import ParseMode
 
-from .database import create_tables
-from .routes import routes
+TOKEN = sys.argv[1] if len(sys.argv) > 1 else getenv("BOT_TOKEN")
+
+props = DefaultBotProperties(parse_mode=ParseMode.HTML)
+bot = Bot(token=TOKEN, default=props)
 
 
-async def main(bot: Bot):
-    dp = Dispatcher(storage=MemoryStorage())
+def main():
+    from .routes import routes
+
+    dp = Dispatcher()
     dp.include_router(routes)
 
-    await create_tables()
-
-    await dp.start_polling(bot)
+    dp.run_polling(bot)
 
 
-__all__ = [main]
+__all__ = [main, bot]

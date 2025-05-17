@@ -7,10 +7,22 @@ class Regist(StatesGroup):
     Avatar = State()
 
 
-class Base(StatesGroup):
-    Main = State()
-    Search = State()
+class Main(StatesGroup):
+    Base = State()
+
+    Profile = State()
+    Menu = State()
     Judging = State()
 
 
-__all__ = [Regist, Base]
+class Menu(StatesGroup):
+    Search = State()
+    Filter = State()
+
+
+class Profile(StatesGroup):
+    Name = State()
+    Avatar = State()
+
+
+__all__ = [Regist, Main, Menu, Profile]

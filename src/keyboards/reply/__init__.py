@@ -1,4 +1,5 @@
-from .judging_choise import judging_choise
-from .main import main
+from .base import base
+from .judging import judging
+from .remove import remove
 
-__all__ = [main, judging_choise]
+__all__ = [base, judging, remove]
